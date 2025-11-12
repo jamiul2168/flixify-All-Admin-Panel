@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flixify Admin Panel</title>
+    <title>Flixify Admin Panel Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -12,28 +13,74 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        :root {
+            --primary: #00b4db;
+            --primary-dark: #0083b0;
+            --secondary: #667eea;
+            --secondary-dark: #764ba2;
+            --danger: #f5576c;
+            --danger-dark: #f093fb;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #e2e8f0;
+            --gray: #a0aec0;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--light);
             min-height: 100vh;
             padding: 20px;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .blur-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1574267432553-4b4628081c31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2531&q=80') no-repeat center center;
+            background-size: cover;
+            filter: blur(15px);
+            z-index: -1;
+            opacity: 0.15;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         header {
             text-align: center;
-            padding: 30px 0;
+            padding: 40px 0;
             margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
         }
 
         header h1 {
             font-size: 2.8rem;
             margin-bottom: 10px;
-            background: linear-gradient(90deg, #00b4db, #0083b0);
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -42,7 +89,7 @@
 
         header p {
             font-size: 1.2rem;
-            color: #a0aec0;
+            color: var(--gray);
             max-width: 600px;
             margin: 0 auto;
         }
@@ -55,15 +102,39 @@
         }
 
         .panel-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
             border-radius: 15px;
-            padding: 25px;
+            padding: 30px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
             display: flex;
             flex-direction: column;
             height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .panel-card.main::before {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        }
+
+        .panel-card.dld::before {
+            background: linear-gradient(90deg, var(--secondary), var(--secondary-dark));
+        }
+
+        .panel-card.plus::before {
+            background: linear-gradient(90deg, var(--danger), var(--danger-dark));
         }
 
         .panel-card:hover {
@@ -73,27 +144,75 @@
         }
 
         .panel-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #00b4db;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-card.main .panel-icon {
+            background: rgba(0, 180, 219, 0.1);
+            color: var(--primary);
+        }
+
+        .panel-card.dld .panel-icon {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--secondary);
+        }
+
+        .panel-card.plus .panel-icon {
+            background: rgba(245, 87, 108, 0.1);
+            color: var(--danger);
         }
 
         .panel-card h3 {
             font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #e2e8f0;
+            margin-bottom: 15px;
+            color: var(--light);
         }
 
         .panel-card p {
-            color: #a0aec0;
-            margin-bottom: 20px;
+            color: var(--gray);
+            margin-bottom: 25px;
             flex-grow: 1;
+        }
+
+        .features {
+            margin: 20px 0;
+        }
+
+        .features h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .features ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .features li {
+            padding: 5px 0;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+        }
+
+        .features li i {
+            margin-right: 8px;
+            font-size: 0.8rem;
         }
 
         .btn {
             display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(90deg, #00b4db, #0083b0);
+            padding: 14px 28px;
             color: white;
             border: none;
             border-radius: 8px;
@@ -103,89 +222,117 @@
             transition: all 0.3s ease;
             text-decoration: none;
             text-align: center;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+
+        .btn-main {
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
             box-shadow: 0 4px 15px rgba(0, 180, 219, 0.3);
         }
 
-        .btn:hover {
+        .btn-main:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 180, 219, 0.4);
         }
 
         .btn-secondary {
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, var(--secondary), var(--secondary-dark));
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary:hover {
+            transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn-danger {
-            background: linear-gradient(90deg, #f093fb, #f5576c);
-            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+            background: linear-gradient(90deg, var(--danger), var(--danger-dark));
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
         }
 
         .btn-danger:hover {
-            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
         }
 
-        .iframe-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-top: 20px;
-            display: none;
-        }
-
-        .iframe-header {
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.2);
+        .status-bar {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
         }
 
-        .iframe-header h3 {
-            font-size: 1.2rem;
-            color: #e2e8f0;
-        }
-
-        .close-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: #a0aec0;
-            border: none;
-            border-radius: 5px;
-            width: 30px;
-            height: 30px;
+        .status {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            color: var(--gray);
         }
 
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
+        .status i {
+            margin-right: 5px;
         }
 
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            background: white;
+        .online {
+            color: #48bb78;
         }
 
         footer {
             text-align: center;
             padding: 30px 0;
-            color: #718096;
+            color: var(--gray);
             font-size: 0.9rem;
             margin-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--card-border);
+        }
+
+        .security-notice {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .security-notice h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: var(--light);
         }
 
         @media (max-width: 768px) {
@@ -197,71 +344,159 @@
                 font-size: 2.2rem;
             }
             
-            iframe {
-                height: 400px;
+            .panel-card {
+                padding: 20px;
             }
         }
     </style>
 </head>
 <body>
+    <div class="blur-background"></div>
+    
     <div class="container">
         <header>
-            <h1>Flixify Admin Panel</h1>
-            <p>Centralized dashboard for managing all Flixify admin panels</p>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-film"></i>
+                </div>
+                <div>
+                    <h1>Flixify Admin Panel</h1>
+                    <p>Centralized dashboard for managing all Flixify admin panels</p>
+                </div>
+            </div>
         </header>
         
         <div class="dashboard">
-            <div class="panel-card">
-                <div class="panel-icon">🔧</div>
+            <div class="panel-card main">
+                <div class="panel-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
                 <h3>Main Admin Panel</h3>
                 <p>Access the primary Flixify admin panel for overall system management and configuration.</p>
-                <button class="btn" onclick="loadPanel('https://flixify.adminpanel.jhtone.site/', 'Main Admin Panel')">Open Main Panel</button>
+                
+                <div class="features">
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> User management</li>
+                        <li><i class="fas fa-check-circle"></i> Content moderation</li>
+                        <li><i class="fas fa-check-circle"></i> Analytics dashboard</li>
+                        <li><i class="fas fa-check-circle"></i> System settings</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-main" onclick="openPanel('https://flixify.adminpanel.jhtone.site/')">
+                    <i class="fas fa-external-link-alt"></i> Open Main Panel
+                </button>
+                
+                <div class="status-bar">
+                    <div class="status">
+                        <i class="fas fa-circle online"></i> System Online
+                    </div>
+                    <div class="status">
+                        <i class="fas fa-shield-alt"></i> Secure Connection
+                    </div>
+                </div>
             </div>
             
-            <div class="panel-card">
-                <div class="panel-icon">🛡️</div>
+            <div class="panel-card dld">
+                <div class="panel-icon">
+                    <i class="fas fa-download"></i>
+                </div>
                 <h3>DLD Admin Panel</h3>
                 <p>Manage downloads, content delivery, and distribution settings through the DLD admin interface.</p>
-                <button class="btn btn-secondary" onclick="loadPanel('https://flixify.dld.adminpanel.jhtone.site/', 'DLD Admin Panel')">Open DLD Panel</button>
+                
+                <div class="features">
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Download statistics</li>
+                        <li><i class="fas fa-check-circle"></i> Bandwidth management</li>
+                        <li><i class="fas fa-check-circle"></i> Content distribution</li>
+                        <li><i class="fas fa-check-circle"></i> Server status</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="openPanel('https://flixify.dld.adminpanel.jhtone.site/')">
+                    <i class="fas fa-external-link-alt"></i> Open DLD Panel
+                </button>
+                
+                <div class="status-bar">
+                    <div class="status">
+                        <i class="fas fa-circle online"></i> System Online
+                    </div>
+                    <div class="status">
+                        <i class="fas fa-shield-alt"></i> Secure Connection
+                    </div>
+                </div>
             </div>
             
-            <div class="panel-card">
-                <div class="panel-icon">🔞</div>
+            <div class="panel-card plus">
+                <div class="panel-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
                 <h3>18+ Admin Panel</h3>
                 <p>Access the restricted 18+ content management panel with age-verification controls.</p>
-                <button class="btn btn-danger" onclick="loadPanel('https://flixify.18plus.adminpanel.jhtone.site/', '18+ Admin Panel')">Open 18+ Panel</button>
+                
+                <div class="features">
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Age-restricted content</li>
+                        <li><i class="fas fa-check-circle"></i> Content filtering</li>
+                        <li><i class="fas fa-check-circle"></i> User verification</li>
+                        <li><i class="fas fa-check-circle"></i> Compliance monitoring</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-danger" onclick="openPanel('https://flixify.18plus.adminpanel.jhtone.site/')">
+                    <i class="fas fa-external-link-alt"></i> Open 18+ Panel
+                </button>
+                
+                <div class="status-bar">
+                    <div class="status">
+                        <i class="fas fa-circle online"></i> System Online
+                    </div>
+                    <div class="status">
+                        <i class="fas fa-shield-alt"></i> Secure Connection
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div id="panelContainer" class="iframe-container">
-            <div class="iframe-header">
-                <h3 id="panelTitle">Panel Title</h3>
-                <button class="close-btn" onclick="closePanel()">✕</button>
-            </div>
-            <iframe id="adminFrame" src="" title="Admin Panel"></iframe>
+        <div class="security-notice">
+            <h3><i class="fas fa-lock"></i> Security Notice</h3>
+            <p>This dashboard provides secure access to Flixify admin panels. All connections are encrypted and monitored. Ensure you log out after each session and do not share your credentials.</p>
         </div>
         
         <footer>
-            <p>Flixify Admin Dashboard &copy; 2025 | Secure Access Only</p>
+            <p>Flixify Admin Dashboard © 2025 | Secure Access Only | v2.1.4</p>
         </footer>
     </div>
 
     <script>
-        function loadPanel(url, title) {
-            document.getElementById('adminFrame').src = url;
-            document.getElementById('panelTitle').textContent = title;
-            document.getElementById('panelContainer').style.display = 'block';
+        function openPanel(url) {
+            // Open the panel in the same tab
+            window.location.href = url;
             
-            // Scroll to the iframe
-            document.getElementById('panelContainer').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
+            // Add a visual feedback for the button click
+            event.target.classList.add('clicked');
+            setTimeout(() => {
+                event.target.classList.remove('clicked');
+            }, 300);
         }
         
-        function closePanel() {
-            document.getElementById('panelContainer').style.display = 'none';
-            document.getElementById('adminFrame').src = '';
-        }
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.panel-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
     </script>
 </body>
 </html>
