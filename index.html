@@ -20,6 +20,8 @@
             --secondary-dark: #764ba2;
             --danger: #f5576c;
             --danger-dark: #f093fb;
+            --telegram: #0088cc;
+            --telegram-dark: #006699;
             --dark: #1a1a2e;
             --darker: #16213e;
             --light: #e2e8f0;
@@ -137,6 +139,10 @@
             background: linear-gradient(90deg, var(--danger), var(--danger-dark));
         }
 
+        .panel-card.telegram::before {
+            background: linear-gradient(90deg, var(--telegram), var(--telegram-dark));
+        }
+
         .panel-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
@@ -169,6 +175,11 @@
         .panel-card.plus .panel-icon {
             background: rgba(245, 87, 108, 0.1);
             color: var(--danger);
+        }
+
+        .panel-card.telegram .panel-icon {
+            background: rgba(0, 136, 204, 0.1);
+            color: var(--telegram);
         }
 
         .panel-card h3 {
@@ -284,6 +295,16 @@
         .btn-danger:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-telegram {
+            background: linear-gradient(90deg, var(--telegram), var(--telegram-dark));
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+        }
+
+        .btn-telegram:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
         }
 
         .status-bar {
@@ -448,6 +469,37 @@
                 
                 <button class="btn btn-danger" onclick="openPanel('https://flixify.18plus.adminpanel.jhtone.site/')">
                     <i class="fas fa-external-link-alt"></i> Open 18+ Panel
+                </button>
+                
+                <div class="status-bar">
+                    <div class="status">
+                        <i class="fas fa-circle online"></i> System Online
+                    </div>
+                    <div class="status">
+                        <i class="fas fa-shield-alt"></i> Secure Connection
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel-card telegram">
+                <div class="panel-icon">
+                    <i class="fab fa-telegram"></i>
+                </div>
+                <h3>Telegram Bot Admin Panel</h3>
+                <p>Manage the Flixify Telegram bot, user interactions, and automated messaging systems.</p>
+                
+                <div class="features">
+                    <h4>Key Features:</h4>
+                    <ul>
+                        <li><i class="fas fa-check-circle"></i> Bot configuration</li>
+                        <li><i class="fas fa-check-circle"></i> User interaction logs</li>
+                        <li><i class="fas fa-check-circle"></i> Message templates</li>
+                        <li><i class="fas fa-check-circle"></i> Analytics & reporting</li>
+                    </ul>
+                </div>
+                
+                <button class="btn btn-telegram" onclick="openPanel('https://flixify.admin.bot.tg.jhtone.site/')">
+                    <i class="fas fa-external-link-alt"></i> Open Telegram Bot Panel
                 </button>
                 
                 <div class="status-bar">
